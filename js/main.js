@@ -1,10 +1,4 @@
 
-
-
-class Word {
-  constructor() {
-    this.state = {
-      word: ""
-    }
-  }
+function test(Name){
+  alert("Test worked " + Name);
 }

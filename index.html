@@ -1,39 +1,27 @@
 <!doctype html>
 <html class="no-js" lang="">
 
-<head>
-  <meta charset="utf-8">
-  <title></title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
 
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
+  </head>
 
-  <link rel="manifest" href="site.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
-  <!-- Place favicon.ico in the root directory -->
+  <body>
 
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
+    <p>Hello! This is a test</p>
 
-  <meta name="theme-color" content="#fafafa">
-</head>
+    <form action="js/main.js" method="post">
+      <label for="word">Last name:</label><br>
+      <input type="text" id="word" name="word">
+      <input type="submit" value="Submit">
+    </form>
 
-<body>
 
-  <script src = "main.js"></script>
-  <p>Hello world! This is HTML5 Boiler.</p>
+    <button onclick = "test(Name)"> Test Button </button>
 
-  <div><label for="Name">Name:</label>
-    <input type="text" id="Name" name="Name" placeholder="Jane Doe"> </div>
 
-  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
-  <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
 
-</body>
+  </body>
+
 
 </html>
