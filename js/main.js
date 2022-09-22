@@ -1,4 +1,23 @@
 
+const Ordinals = ["first", "second", "third"];
+
+const Glosses = {
+  SBJ: "subject",
+  TAM: "tense",
+  OBJ: "object",
+
+  //1, 2, 3 are translated are first person, second person, third person
+  SG: "singular",
+  PL: "plural",
+  POS: "positive",
+  NEG: "negative",
+
+  PRS: "present",
+  PST: "past",
+  FUT: "future",
+  PRF: "perfect"
+}
+
 const Subjects = {
   s1SG_POS: "ni",
   s2SG_POS: "u",
@@ -7,83 +26,83 @@ const Subjects = {
   s2PL_POS: "m",
   s3PL_POS: "wa"
 }
+
 const Tenses = {
-  tSIMP_PRES: "na",
-  tSIMP_PAST: "li",
-  tPRES_PERF: "me",
+  tPRS: "na",
+  tPST: "li",
+  tPRS_PRF: "me",
   tFUT: "ta"
 }
 
 const Objects = {
-  s1SG_POS: "ni",
-  s2SG_POS: "ku",
+  o1SG: "ni",
+  o2SG: "ku",
   //Only one entered for now
-  s3SG_POS: "m",
-  s1PL_POS: "tu",
-  s23PL_POS: "wa",
+  o3SG: "m",
+  o1PL: "tu",
+  o23PL: "wa",
 }
 
 const MorphemeTypes = {
-  s: Subjects,
-  t: Tenses,
-  o: Objects
+  SBJ: Subjects,
+  TAM: Tenses,
+  OBJ: Objects
 }
 
 function inputText() {
-  let input = document.getElementById("Verb").value;
+  let input = document.getElementById("input").value;
 
+  //End form is going to look something like:
+  //SBJ: s1SG_POS
   let verb = {};
 
-
-  for(let initial of Object.keys(MorphemeTypes) ){
-    let found = findMorpheme(MorphemeTypes[initial], input);
-    if(found){
-      verb[initial] = "Your subject is " + found;
-      input = input.substring(found.length);
-    } else {
-      verb[initial] = "No subject found";
+  //Slot is SBJ, TAM, OBJ
+  //Gloss is gonna look like s1PL_POS
+  for(let slot of Object.keys(MorphemeTypes) ){
+    let gloss = findMorpheme(MorphemeTypes[slot], input);
+    verb[slot] = gloss;
+    if(gloss){
+      input = input.substring(MorphemeTypes[slot][gloss].length);
     }
-    document.getElementById(initial).innerHTML = verb[initial];
+    document.getElementById(slot).innerHTML = print(verb, slot);
   }
 
+  document.getElementById("ROOT").innerHTML = "You're left with the verb root: " + input;
 
-  //document.getElementById("subj").innerHTML = "Subj is: " + findMorpheme(input);
+
+  //No way to deal with extensions yet
+  //Or with m/mw objects
+  //Or with negation
+  //Or with negation and tense changes
+}
+
+//Returns what will be printed out for a given verb and slot
+function print(verb, slot) {
+  if(verb[slot] ) {
+    let runningString = "The " + Glosses[slot] + " is ";
+    let tempSlot = verb[slot].substring(1); //verb[slot] = gloss
+    if (Number.parseInt(tempSlot.charAt(0) ) ) {
+      runningString = runningString + Ordinals[Number.parseInt(tempSlot.charAt(0) ) - 1] + " person ";
+      tempSlot = tempSlot.substring(1);
+    }
+    tempSlot.split("_").forEach(item => runningString = runningString + Glosses[item] + " ");
+    return runningString + "(" + MorphemeTypes[slot][verb[slot]] + ")";
+  } else {
+    return "No " + Glosses[slot] + " found";
+  }
 
 }
 
-function findMorpheme(morphemeType, input){
-
+//Returns the key, so something like s1SG_POS
+function findMorpheme(morphemeType, input) {
   for(let key of Object.keys(morphemeType) ){
-    const morpheme = morphemeType[key];
-    if(morpheme === input.substring(0, morpheme.length) ){
-      return morpheme;
+    if(morphemeType[key] === input.substring(0, morphemeType[key].length) ){
+      return key;
     }
   }
-
-
-  /* switch (morpheme){
-    case Subjects:
-      alert("hello");
-          break;
-    case Tenses:
-      alert("hi");
-          break;
-    default:
-      alert("default " + morpheme);
-  } */
-
+  return null;
 }
 
-
-/*
-function findSubj(verb) {
-  for(let subject of Object.keys(Subjects) ){
-    if(Subjects[subject] === verb.substring(0, Subjects[subject].length) ){
-      return Subjects[subject];
-    }
-  }
-  return "not found... please don't mess with me. My time is valuable";
-} */
 
 
 
