@@ -69,6 +69,8 @@ function inputText() {
 
   document.getElementById("ROOT").innerHTML = "You're left with the verb root: " + input;
 
+  //At this point, input is just the root
+  document.getElementById("split").innerHTML = splitVerb(verb, input);
 
   //No way to deal with extensions yet
   //Or with m/mw objects
@@ -76,22 +78,52 @@ function inputText() {
   //Or with negation and tense changes
 }
 
+
+//Verb is the verb, input is (at this point) the root
+function splitVerb(verb, input) {
+  let runningString = "If I were you, I would split up the verb as follows: ";
+  for(let slot of Object.keys(verb) ){
+    if(verb[slot] ){
+      runningString = runningString + MorphemeTypes[slot][verb[slot] ] + "-";
+    } else {
+      runningString = runningString + "\u2205-";
+    }
+  }
+  return runningString + input;
+}
+
+
 //Returns what will be printed out for a given verb and slot
 function print(verb, slot) {
   if(verb[slot] ) {
     let runningString = "The " + Glosses[slot] + " is ";
-    let tempSlot = verb[slot].substring(1); //verb[slot] = gloss
-    if (Number.parseInt(tempSlot.charAt(0) ) ) {
-      runningString = runningString + Ordinals[Number.parseInt(tempSlot.charAt(0) ) - 1] + " person ";
-      tempSlot = tempSlot.substring(1);
-    }
-    tempSlot.split("_").forEach(item => runningString = runningString + Glosses[item] + " ");
-    return runningString + "(" + MorphemeTypes[slot][verb[slot]] + ")";
+    //Change this as needed
+    runningString = runningString + printWordedGloss(verb, slot);
+    runningString = runningString + printSwahiliMorpheme(verb, slot);
+    return runningString;
   } else {
     return "No " + Glosses[slot] + " found";
   }
-
 }
+
+//Something like: The subject is first person singular positive
+function printWordedGloss(verb, slot) {
+  let runningString = "";
+  let tempSlot = verb[slot].substring(1); //verb[slot] = gloss
+  if (Number.parseInt(tempSlot.charAt(0) ) ) {
+    runningString = runningString + Ordinals[Number.parseInt(tempSlot.charAt(0) ) - 1] + " person ";
+    tempSlot = tempSlot.substring(1);
+  }
+  tempSlot.split("_").forEach(item => runningString = runningString + Glosses[item] + " ");
+  return runningString;
+}
+
+//Something like (ni)
+function printSwahiliMorpheme(verb, slot) {
+  return "(" + MorphemeTypes[slot][verb[slot]] + ")"
+}
+
+
 
 //Returns the key, so something like s1SG_POS
 function findMorpheme(morphemeType, input) {
